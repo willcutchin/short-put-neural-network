@@ -1,4 +1,11 @@
-# Short Put Neural Network
+# Short Put Neural Network #
+## Description
 
-## Objectives
-### Utilize a LSTM neural network to find the most optimal strike price to short naked put options on popular underlyings
+## Table of Contents
+   * Description
+   * Objectives
+   * Technology Stack
+   * API References
+   * Tests
+   * Credits
+   * Licenses
