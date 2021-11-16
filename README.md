@@ -2,10 +2,14 @@
 ## Description
 
 ## Table of Contents
-   * Description
    * Objectives
-   * Technology Stack
-   * API References
-   * Tests
-   * Credits
-   * Licenses
+   * Tasks
+   * Implementation
+     * Inputs
+     * Outputs
+   * Math Required
+     * Formulas
+     * Weighting
+   * Results
+   * References
+   * License
