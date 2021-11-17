@@ -7,7 +7,7 @@
 #### 
 
 ## 📋 Table of Contents
-   * [Objectives](##📌-Objectives)
+   * [Objectives](#-objectives)
    * Tasks
    * Implementation
      * Structure
