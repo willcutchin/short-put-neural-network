@@ -51,8 +51,9 @@
 ### Outputs
 
 ## ✏️ Math Required
-### Formulas
-### Weighting
+### Structure
+### * Formulas ###
+### * Weighting ###
 
 ## ⚙ Technology Stack
 
