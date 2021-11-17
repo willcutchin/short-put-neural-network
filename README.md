@@ -8,18 +8,18 @@
 
 ## 📋 Table of Contents
    * [Objectives](#-objectives)
-   * Tasks
-   * Implementation
+   * [Tasks](#-task-table)
+   * [Implementation](#-implementation)
      * Structure
        * Inputs
        * Outputs  
-   * Math Required
+   * [Math Required](#-math-required)
      * Formulas
      * Weighting
-   * Technology Stack
-   * Results
-   * References
-   * License
+   * [Technology Stack](#-technology-stack)
+   * [Results](#-results)
+   * [References](#-references)
+   * [License](#-licenses)
 
 ## 📌 Objectives
 * Create a neural network to find a informed data value for short puts on a given underlying
@@ -53,6 +53,8 @@
 ## ✏️ Math Required
 ### Formulas
 ### Weighting
+
+## ⚙ Technology Stack
 
 ## 📊 Results
 
