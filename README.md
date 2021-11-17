@@ -72,6 +72,8 @@ This project aims to create a LSTM neural network that will take finacial inform
 ### Weighting Formulas
 
 ## ⚙ Technology Stack
+* Languages
+* Libraries
 
 ## 📊 Results
 
