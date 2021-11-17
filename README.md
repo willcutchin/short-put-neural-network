@@ -4,13 +4,15 @@
 * Erik Klem
 * Yash Gollapudi
 ### Description
+#### 
 
 ## 📋 Table of Contents
-   * Objectives
+   * [Objectives](##📌-Objectives)
    * Tasks
    * Implementation
-     * Inputs
-     * Outputs
+     * Structure
+       * Inputs
+       * Outputs  
    * Math Required
      * Formulas
      * Weighting
@@ -20,12 +22,13 @@
    * License
 
 ## 📌 Objectives
-* Implement a LSTM Neural Network From Scratch
-* Clean and Gather Financial Data for Training
-* Determine Inputs and Outputs for The Neural Network
-* Train the Neural Network With Financial Data
-* Create Visualization of Results
-* Release the Neural Network to Handle Real Time Data
+* Create a neural network to find a informed data value for short puts on a given underlying
+  * Implement a LSTM Neural Network From Scratch
+    * Clean and Gather Financial Data for Training
+    * Determine Inputs and Outputs for The Neural Network
+    * Train the Neural Network With Financial Data
+  * Create Visualization of Results
+  * Release the Neural Network to Handle Real Time Data
 
 
 ## 🗓 Task Table
