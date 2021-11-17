@@ -19,7 +19,7 @@
    * [Technology Stack](#-technology-stack)
    * [Results](#-results)
    * [References](#-references)
-   * [License](#-licenses)
+   * [Licenses](#-licenses)
 
 ## 📌 Objectives
 * Create a neural network to find a informed data value for short puts on a given underlying
