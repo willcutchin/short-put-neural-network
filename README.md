@@ -52,8 +52,10 @@
 
 ## ✏️ Math Required
 ### Structure
-### * Formulas ###
-### * Weighting ###
+ * #### Formulas 
+   * ##### Inputs
+   * ##### Outputs
+ * #### Weighting 
 
 ## ⚙ Technology Stack
 
