@@ -13,7 +13,7 @@ This project aims to create a LSTM neural network that will take finacial inform
 * Strategy
   * Shorting put option
 * Days To Expiration 
-  * Closest monthly expiration to 45 days DTE
+  * Closest monthly expiration to 45 days DTE (round up if less than 35 days)
 * Selling
   * Selling one put contract at every strike from the 50Δ to 20Δ
 
