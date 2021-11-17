@@ -14,7 +14,8 @@ This project aims to create a LSTM neural network that will take finacial inform
   * Shorting single leg put options contract (1 qnt)
 * Days To Expiration 
   * Closest monthly expiration to 45 days DTE
-* 
+* Selling
+  * Selling one put contract at every strike from the 50Δ to 20Δ
 
 ## 📋 Table of Contents
    * [Objectives](#-objectives)
