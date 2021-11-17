@@ -54,9 +54,11 @@
 ## ✏️ Math Required
 ### Financial Formulas  
 * #### Delta
+  * ##### Formula
+  * ##### Function
 * #### Implied Volitility
 * #### Strike Price
-### Weighting 
+### Weighting Formulas
 
 ## ⚙ Technology Stack
 
