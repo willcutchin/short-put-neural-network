@@ -3,10 +3,10 @@
 * Will Cutchin
 * Erik Klem
 * Yash Gollapudi
-## Description
+### Description
 
-## Table of Contents
-   * Objectives
+## 📋 Table of Contents
+   * [Objectives](#📌-Objectives)
    * Tasks
    * Implementation
      * Inputs
@@ -14,11 +14,12 @@
    * Math Required
      * Formulas
      * Weighting
+   * Technology Stack
    * Results
    * References
    * License
 
-## Objectives
+## 📌 Objectives
 * Implement a LSTM Neural Network From Scratch
 * Clean and Gather Financial Data for Training
 * Determine Inputs and Outputs for The Neural Network
@@ -27,7 +28,7 @@
 * Release the Neural Network to Handle Real Time Data
 
 
-## Task Table
+## 🗓 Task Table
 | Task           | Time required | Assigned to   | Current Status | Finished | 
 |----------------|---------------|---------------|----------------|-----------|
 | LSTM Neural Net Theory| > 4 Days       | Will/Erik/Yash   | In Progress   |   <li> [ ] </li>  |
@@ -42,17 +43,17 @@
 | Visualization - Real Time Results   | > 2 Days     | Will   |   TODO      |    <li> [ ] </li> |
 
 
-## Implementation
+## 🛠 Implementation
 ### Inputs
 ### Outputs
 
-## Math Required
+## ✏️ Math Required
 ### Formulas
 ### Weighting
 
-## Results
+## 📊 Results
 
-## References
+## 🔗 References
 
-## License
+## Licenses
 
