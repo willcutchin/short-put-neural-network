@@ -6,7 +6,7 @@
 ### Description
 
 ## 📋 Table of Contents
-   * [Objectives](#objectives)
+   * Objectives
    * Tasks
    * Implementation
      * Inputs
