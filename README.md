@@ -47,15 +47,16 @@
 
 
 ## 🛠 Implementation
-### Inputs
-### Outputs
+### Structure
+* #### Inputs
+* #### Outputs
 
 ## ✏️ Math Required
-### Structure
- * #### Formulas 
-   * ##### Inputs
-   * ##### Outputs
- * #### Weighting 
+### Financial Formulas  
+* #### Delta
+* #### Implied Volitility
+* #### Strike Price
+### Weighting 
 
 ## ⚙ Technology Stack
 
