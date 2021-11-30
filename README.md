@@ -5,8 +5,6 @@
 * Yash Gollapudi
 
 ### Description
-
-
 This project aims to create a LSTM neural network that will take finacial information for a given underlying over a given time and provide a delta value that is suggested to short puts at. This neural network will be trained on historical data over a given time and aim to give the highest sensable delta value whilest minimizing chances of being in the money at expiration.
 
 ### Assuptions
