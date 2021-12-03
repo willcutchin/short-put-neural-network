@@ -32,7 +32,7 @@ This project aims to create a LSTM neural network that will take finacial inform
 
 ## 📌 Objectives
 * Create a neural network to find a informed data value for short puts on a given underlying
-  * Implement a LSTM Neural Network From Scratch
+  * Implement a RNN Neural Network From Scratch
     * Clean and Gather Financial Data for Training
     * Determine Inputs and Outputs for The Neural Network
     * Train the Neural Network With Financial Data
