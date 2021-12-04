@@ -1,0 +1,54 @@
+import math
+import yfinance as yf
+import numpy as np
+import pandas as pd
+from datetime import date
+from datetime import timedelta
+
+class data:
+    def __init__(self,ticker):
+        self.ticker = ticker
+
+    #generates the equavilent percentile strikes for historical data
+    def strikeGeneration(pStrikes, price):
+        adjStrikes = np.array([i*price for i in pStrikes])
+        return adjStrikes
+
+    def deltaFunc( riskF, curPrice, strike, vola):
+        d1 = (math.log(curPrice/strike) + .125(riskF + (vola**2)/(2)))/(vola * math.sqrt(.125))
+
+        d2 = d1 - vola*math.sqrt(.125)
+
+        normProbd1 = (1/math.sqrt(2*math.pi)) * math.e **-1((d1**2)/2)
+        ## May need to figure out if I input d1 as -d1
+        normProbd2 = (1/math.sqrt(2*math.pi)) * math.e **-1((d2**2)/2)
+        ## May need to figure out if I input d2 as -d2
+        delta = (strike*math.e**(-riskF*.125)) * normProbd2 - curPrice*normProbd1
+        return delta
+
+    #handles data preprocessing 
+    def build(self):
+        stock = yf.Ticker(self.ticker.upper())
+        #closest to 45 days away, initialized as arbitrary days far away
+        cl45 = "1999-01-01"
+        for i in stock.options:
+            if math.abs(45-(date(int(i[:4]),int(i[5:7]),int(i[8:10]))-date.today()).days) < math.abs(45-(date(int(cl45[:4]),int(cl45[5:7]),int(cl45[8:10]))-date.today()).days):
+                cl45 = i
+        #days till expiry
+        dte = (date(int(cl45[:4]),int(cl45[5:7]),int(cl45[8:10]))-date.today()).days
+        yesterday = str((date.today() - timedelta(days=1)).year) + "-" + str((date.today() - timedelta(days=1)).month) + "-" + str((date.today() - timedelta(days=1)).day)
+        option_chain = stock.option_chain(date = cl45).puts
+        currentPrice = stock.info['regularMarketPrice']
+        strikes = np.array([x for x in option_chain.loc[:,"strike"]])
+        percentileStrikes = np.array([i/currentPrice for i in strikes])
+        rawHistoricalData = stock.download(tickers = self.ticker, start = "2010-01-01", end = yesterday)
+        extraHistoricalData = stock.download(tickers = self.ticker, start = "2009-12-01", end = yesterday)
+        #70% of the data is used for training
+        training = np.array([x for x in range(math.floor(np.size(rawHistoricalData)*0.7))])
+        trainingPprices = training["Close"]
+        trainingVolumes = training["Volume"]
+        #30% of the data is used for testing
+        testing = np.array([x for x in range(math.floor(np.size(rawHistoricalData)*0.7),np.size(rawHistoricalData))])
+        testingPrices = testing["Close"]
+        testingVolumes = testing["Volume"]
+    
