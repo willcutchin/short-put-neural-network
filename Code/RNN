@@ -1,25 +1,26 @@
 import numpy as np
 import pandas as pd
+from Data_Fixing_for_RNN import *
+from Data import *
+from Data_Fixing_for_RNN import *
 
 #make alpha .01
 #data = np.array(data)
 #m, n = data.shape
 #m is the amount of rows we have
 #n is the amount of features +1
-def intit_initialVal():
+def intit_initialVal(sizeOf):
     #intialize param
     
-    weight1 = np.random.rand(10, 100) -.5 #We set it eqaul to 10, 100 beacuse it is going to generate random num between -.5 and .5 for every element in the arr
-    bias1 = np.random.rand(10,1) -.5 #This is a random bais for the nueral network between -.5 and .5
-    weight2 = np.random.rand(10, 10) -.5 #The next wieght is only between 10 and 10 because it ends up being our hidden layer which only has 10 neurons
-    bias2 = np.random.rand(10,1) -.5 #This does the same thing as bais 1
+    weight1 = np.random.rand(5, sizeOf-1) -.5 #We set it eqaul to 10, 100 beacuse it is going to generate random num between -.5 and .5 for every element in the arr
+    bias1 = np.random.rand(5,1) -.5 #This is a random bais for the nueral network between -.5 and .5
+    weight2 = np.random.rand(5, 5) -.5 #The next wieght is only between 10 and 10 because it ends up being our hidden layer which only has 10 neurons
+    bias2 = np.random.rand(5,1) -.5 #This does the same thing as bais 1
     return weight1, bias1, weight2, bias2
 
 def ReLu(z):
     #This is the activation function
-    if(z > 0): #Since Relu is a linear line we can say that if z is greater than 0 then just retrun itself
-        return z
-    return 0
+    return np.maximum(0, z)
 
 def softMax(z):
     return np.exp(z)/np.sum(np.exp(z))
@@ -30,10 +31,11 @@ def forwardProp(weight1, bias1, weight2, bias2, x):
     A1 = ReLu(Z1) #Rectified linear unit is our activation function
     Z2 = weight2.dot(A1) + bias2 # second unactivate layer
     A2 = softMax(A1) #second activation function
+    return Z1, A1, Z2, A2
 
 def changeY(y):
     #
-    newY = np.zeros((y.size, y.max() +1))
+    newY = np.zeros((y.size, int(y.max() +1)))
     newY[np.arange(y.size), y] = 1
     newY = newY.T
     return newY
@@ -46,7 +48,6 @@ def derivOfRelu(Z):
 
 def backProp(Z1, A1, Z2, A2, weight2, X, Y):
     #Back prop is a way that we go back to the layer that we were just at. This helps the bais and wieght change and get us a much clearer answer
-    
     newY = changeY(Y) #Gives us a new y-value so this is not linear
     dz2 = A2 - newY #This is the error of the second layer or what we would like to 
     dweight2 = (1/Y.size) * dz2.dot(A1.T)
@@ -71,8 +72,8 @@ def accuracy(predict, y):
     print(predict, y)
     return np.sum(predict == y)/y.size
 
-def gradient(x, y, iter, alpha, m, n):
-    weight1, bias1, weight2, bias2 = intit_initialVal()
+def gradient(x, y, iter, alpha, sizeOf):
+    weight1, bias1, weight2, bias2 = intit_initialVal(sizeOf)
     for i in range(iter):
         Z1, A1, Z2, A2 = forwardProp(weight1, bias1, weight2, bias2, x)
         dweight1, dbias1, dweight2, dbias2 = backProp(Z1, A1, Z2, A2, weight2, x, y)
@@ -82,3 +83,13 @@ def gradient(x, y, iter, alpha, m, n):
             print(accuracy(predictions(A2),y))
     return weight1, bias1, weight2, bias2
 
+
+
+
+
+cleaning = inputs()
+
+data_dev_test, Y_dev, X_dev, data_train, Y_train, X_train, sizeOf = inputs.cleaning()
+
+gradient(X_train, Y_train, 300, .01, len(X_train)+1)
+    
