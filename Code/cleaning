@@ -1,48 +1,27 @@
 import pandas as pd
 import numpy as np
 from Data import *
+from sklearn.model_selection import train_test_split
 
 class inputs:
 
-    def cleaning():
+    def getStock():
         obj = data("MSFT")
-        training = obj.build()
-        training = training.T
-        sizeOf = len(training)
-        percentOf = sizeOf * .8
-        amountOf = round(percentOf)
-        rows, columns = training.shape
-        print("rows: " + str(rows))
-        print("columns: " + str(columns))
-        print("Amount of " + str(amountOf))
-        print("")
-        print("legth of the training " + str(len(training)))
-        print("")
+        stockData = obj.build()
+        print(stockData.shape)
+        return stockData
 
 
+    def getClosing(df):
+        df = df[["Close"]]
+        print(df.head(4))
+        predictInDays = 45
+        df["Predeiction"] = df["Close"].shift(-predictInDays)
+        arrClosing = np.array(df.drop(["Predeiction"], 1))[:-predictInDays]
+        arrPrediction = np.array(df["Predeiction"])[:-predictInDays]
 
-        data_dev_test = training[amountOf : rows-1]
-        #data_dev_test = data_dev_test.transpose()
-        Y_dev = data_dev_test[0]
-        X_dev = data_dev_test[1: columns]
-        print("Y_dev " + str(len(Y_dev)))
-        print("X_dev " + str(len(X_dev)))
-        print("")
-        print("Length of data set " + str(len(data_dev_test)))
-        print("")
+        x_train, x_test, y_train, y_test = train_test_split(arrClosing, arrPrediction, test_size = .20)
+        print(x_train.shape)
+        print(y_train.shape)
 
-
-        data_train = training[0 : amountOf-1] #line that errors
-        #print(len(data_train))
-        Y_train = data_train[0]
-        X_train = data_train[1: columns]
-        print("Length Y_train " + str(len(Y_train)))
-        print("Length X_train " + str(len(X_train)))
-
-        print("")
-        #print((training))
-        print("")
-        print(len(training))
-        print("-----------")
-
-        return data_dev_test, Y_dev, X_dev, data_train, Y_train, X_train, sizeOf
+        return x_train, x_test, y_train, y_test
