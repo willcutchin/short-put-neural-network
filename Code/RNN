@@ -1,95 +1,239 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+plt.style.use("bmh")
 from Data_Fixing_for_RNN import *
 from Data import *
-from Data_Fixing_for_RNN import *
 
-#make alpha .01
-#data = np.array(data)
-#m, n = data.shape
-#m is the amount of rows we have
-#n is the amount of features +1
 def intit_initialVal(sizeOf):
-    #intialize param
+#intialize param
+    learn = .01
+    nepoch = 50
+    T = sizeOf
+    hidden = 100
+    output = 1
+    bptt_truncate = 5
+    min_clip_value = -10
+    max_clipv_value = 10
+
+    matrixBetweenInputAndHidden = np.random.uniform(0, 1, (hidden, T)) #U
+    matrixBetweenHiddenAndOutput = np.random.uniform(0, 1, (output, hidden)) #V
+    matrixSharedWeights = np.random.uniform(0, 1, (hidden, hidden)) #W
+
+    return learn, nepoch, T, hidden, bptt_truncate, min_clip_value, max_clipv_value, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights
+
+def ReluFunc(x):
+    return 1/ (1 + np.exp(-x))
+
+def cleanX(x):
+    newX = x.flatten()
+    return newX
+
+def checkForLossTraining(nepoch, x, y, hidden, T, matrixBetweenInputAndHidden, matrixSharedWeights, matrixBetweenHiddenAndOutput):
     
-    weight1 = np.random.rand(5, sizeOf-1) -.5 #We set it eqaul to 10, 100 beacuse it is going to generate random num between -.5 and .5 for every element in the arr
-    bias1 = np.random.rand(5,1) -.5 #This is a random bais for the nueral network between -.5 and .5
-    weight2 = np.random.rand(5, 5) -.5 #The next wieght is only between 10 and 10 because it ends up being our hidden layer which only has 10 neurons
-    bias2 = np.random.rand(5,1) -.5 #This does the same thing as bais 1
-    return weight1, bias1, weight2, bias2
+    tempLoss = 0.0
+    for i in range(50):
+        newX, newY = x[i], y[i]
+        PreviosActivation = np.zeros((hidden, 1))
+        for j in range(T):
+            newInput = np.zeros(x.shape)
+            newInput[j] = x[j]
+            matrixBetweenInputAndHidden2 = np.dot(matrixBetweenInputAndHidden, newInput)
+            matrixSharedWeights2 = np.dot(matrixSharedWeights, PreviosActivation)
+            tempAdd = matrixBetweenInputAndHidden2 + matrixSharedWeights2
+            rel = ReluFunc(tempAdd)
+            matrixBetweenHiddenAndOutput2 = np.dot(matrixBetweenHiddenAndOutput, rel)
+            PreviosActivation = rel
+        
+        loss = (y - matrixBetweenHiddenAndOutput2)**2 / 2
+        tempLoss += loss
+    tempLoss = tempLoss / float(y.shape[0])
+    
+    
+    return matrixBetweenInputAndHidden2, matrixBetweenHiddenAndOutput2, matrixSharedWeights2, tempLoss
 
-def ReLu(z):
-    #This is the activation function
-    return np.maximum(0, z)
+def checkLossValidation(x, y, hidden, T, matrixBetweenInputAndHidden, matrixSharedWeights, matrixBetweenHiddenAndOutput):
+    tempLoss = 0.0
+    for i in range(50):
+        newX, newY = x[i], y[i]
+        PreviosActivation = np.zeros((hidden, 1))
+        for j in range(T):
+            newInput = np.zeros(x.shape)
+            newInput[j] = x[j]
+            matrixBetweenInputAndHidden2 = np.dot(matrixBetweenInputAndHidden, newInput)
+            matrixSharedWeights2 = np.dot(matrixSharedWeights, PreviosActivation)
+            tempAdd = matrixBetweenInputAndHidden2 + matrixSharedWeights2
+            rel = ReluFunc(tempAdd)
+            matrixBetweenHiddenAndOutput2 = np.dot(matrixBetweenHiddenAndOutput, rel)
+            PreviosActivation = rel
+        
+        loss = (y - matrixBetweenHiddenAndOutput2)**2 / 2
+        tempLoss += loss
+    tempLoss = tempLoss / float(y.shape[0])
+        
+    return matrixBetweenInputAndHidden2, matrixBetweenHiddenAndOutput2, matrixSharedWeights2, tempLoss
 
-def softMax(z):
-    return np.exp(z)/np.sum(np.exp(z))
+def Epoch(epoch, loss, val_loss):
+    #print( "Epoch ",x +1, " loss: " tempLoss1, " Val Loss ", temploss2)
+    print('Epoch: ', epoch + 1, ', Loss: ', loss, ', Val Loss: ', val_loss)
+
+def training(y, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, T, x, matrixBetweenInputAndHidden2,matrixBetweenHiddenAndOutput2, matrixSharedWeights2):
+    for i in range(50):
+        layers = []
+        newInput = np.zeros((hidden, 1))
+        DerivOfMatrixBetweenInputAndHidden = np.zeros(matrixBetweenInputAndHidden.shape)
+        DerivOfNatrixBetweenHiddenAndOutput = np.zeros(matrixBetweenHiddenAndOutput.shape)
+        DerivOfMatrixSharedWeights = np.zeros(matrixSharedWeights.shape)
+
+        DerivOfMatrixBetweenInputAndHidden_t = np.zeros(matrixBetweenInputAndHidden.shape)
+        DerivOfNatrixBetweenHiddenAndOutput_t = np.zeros(matrixBetweenHiddenAndOutput.shape)
+        DerivOfMatrixSharedWeights_t = np.zeros(matrixSharedWeights.shape)
+
+        DerivOfMatrixBetweenInputAndHidden_i = np.zeros(matrixBetweenInputAndHidden.shape)
+        DerivOfMatrixSharedWeights_i = np.zeros(matrixSharedWeights.shape)
+
+        for t in range(T):
+            newInput2 = np.zeros(x.shape)
+            newInput2[t] = x[t]
+            matrixBetweenInputAndHidden2 = np.dot(matrixBetweenInputAndHidden, newInput2)
+            matrixSharedWeights2 = np.dot(matrixSharedWeights, newInput)
+            add = matrixBetweenInputAndHidden2 + matrixSharedWeights2
+            relu = ReluFunc(add)
+            matrixBetweenHiddenAndOutput2 = np.dot(matrixBetweenHiddenAndOutput, relu)
+            layers.append({'relu':relu, 'previous Steps':newInput})
+            newInput = relu
+    return DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, DerivOfMatrixBetweenInputAndHidden_t, DerivOfNatrixBetweenHiddenAndOutput_t, DerivOfMatrixSharedWeights_t, DerivOfMatrixBetweenInputAndHidden_i, DerivOfMatrixSharedWeights_i, layers, newInput, newInput2, relu, matrixBetweenInputAndHidden2, matrixSharedWeights2, add, matrixBetweenHiddenAndOutput2
 
 
-def forwardProp(weight1, bias1, weight2, bias2, x):
-    Z1 = weight1.dot(x) + bias1 #Z1 is the unactivate hidden layer that we are intializing, we just creeate a weight and bais from intitVal
-    A1 = ReLu(Z1) #Rectified linear unit is our activation function
-    Z2 = weight2.dot(A1) + bias2 # second unactivate layer
-    A2 = softMax(A1) #second activation function
-    return Z1, A1, Z2, A2
-
-def changeY(y):
-    #
-    newY = np.zeros((y.size, int(y.max() +1)))
-    newY[np.arange(y.size), y] = 1
-    newY = newY.T
-    return newY
-
-def derivOfRelu(Z):
-    if(Z > 0):
-        return 1
-    return 0
 
 
-def backProp(Z1, A1, Z2, A2, weight2, X, Y):
-    #Back prop is a way that we go back to the layer that we were just at. This helps the bais and wieght change and get us a much clearer answer
-    newY = changeY(Y) #Gives us a new y-value so this is not linear
-    dz2 = A2 - newY #This is the error of the second layer or what we would like to 
-    dweight2 = (1/Y.size) * dz2.dot(A1.T)
-    dbias2 = (1/Y.size) * np.sum(dz2,2)
-    dz1 = weight2.T.dot(dz2) * derivOfRelu(Z1)
-    dweight1 = (1/Y.size) * dz1.dot(X.T)
-    dbias1 = (1/Y.size) * np.sum(dz1,2)
 
-    return dweight1, dbias1, dweight2, dbias2
 
-def update(alpha, weight1, bias1, weight2, bias2, dweight1, dbias1, dweight2, dbias2):
-    weight1 = weight1 - (alpha * dweight1)
-    bias1 = bias1 - (alpha * dbias1)
-    weight2 = weight2 - (alpha * dbias2)
-    bias2 = bias2 - (alpha * dbias2)
-    return weight1, bias1, weight2, bias2
 
-def predictions(A2):
-    return np.argmax(A2, 0)
 
-def accuracy(predict, y):
-    print(predict, y)
-    return np.sum(predict == y)/y.size
 
-def gradient(x, y, iter, alpha, sizeOf):
-    weight1, bias1, weight2, bias2 = intit_initialVal(sizeOf)
+
+
+
+def backProp(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput, DerivOfMatrixSharedWeights_t, y, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, T, x, bptt_truncate, layers, add, DerivOfMatrixSharedWeights, DerivOfNatrixBetweenHiddenAndOutput_t, matrixBetweenHiddenAndOutput2, matrixSharedWeights2, matrixBetweenInputAndHidden2, DerivOfMatrixBetweenInputAndHidden_t):
+    #DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, DerivOfMatrixBetweenInputAndHidden_t, DerivOfNatrixBetweenHiddenAndOutput_t, DerivOfMatrixSharedWeights_t, DerivOfMatrixBetweenInputAndHidden_i, DerivOfMatrixSharedWeights_i, layers, newInput, newInput2, relu, matrixBetweenInputAndHidden2, matrixSharedWeights2, add, matrixBetweenHiddenAndOutput2 = training(y, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, T, x, nepoch)
+    derOfmatrixBetweenHiddenAndOutput3 = (matrixBetweenHiddenAndOutput2 - y.shape)
+    for t in range(50):
+        DerivOfNatrixBetweenHiddenAndOutput_t = np.dot(derOfmatrixBetweenHiddenAndOutput3, np.transpose(layers[t]['previous Steps']))
+        dsv = np.dot(np.transpose(matrixBetweenHiddenAndOutput), derOfmatrixBetweenHiddenAndOutput3)
+        ds = dsv
+        dadd = add * (1 - add) * ds
+        dmulw = dadd * np.ones_like(DerivOfMatrixSharedWeights)
+        dprev_s = np.dot(np.transpose(matrixSharedWeights), dmulw)
+        for i in range(t-1, max(-1, t-bptt_truncate-1), -1):
+            ds = dsv + dprev_s
+            dadd = add * (1 - add) * ds
+            dmulw = dadd * np.ones_like(matrixSharedWeights2)
+            dmulu = dadd * np.ones_like(matrixBetweenInputAndHidden2)
+            DerivOfMatrixSharedWeights_i = np.dot(matrixBetweenHiddenAndOutput, layers[t]['previous Steps'])
+            dprev_s = np.dot(np.transpose(matrixSharedWeights), dmulw)
+            newInput2 = np.zeros(x.shape)
+            newInput2[t] = x[t]
+            DerivOfMatrixBetweenInputAndHidden_i = np.dot(matrixBetweenInputAndHidden, newInput2)
+            dx = np.dot(np.transpose(matrixBetweenInputAndHidden), dmulu)
+
+            DerivOfMatrixBetweenInputAndHidden_t += DerivOfMatrixBetweenInputAndHidden_i
+            DerivOfMatrixSharedWeights_t += DerivOfMatrixSharedWeights_i
+
+        DerivOfNatrixBetweenHiddenAndOutput += DerivOfNatrixBetweenHiddenAndOutput_t #v
+        DerivOfMatrixBetweenInputAndHidden += DerivOfMatrixBetweenInputAndHidden_t #u
+        DerivOfMatrixSharedWeights += DerivOfMatrixSharedWeights_t
+    return DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, DerivOfNatrixBetweenHiddenAndOutput_t, DerivOfMatrixSharedWeights_t, DerivOfMatrixBetweenInputAndHidden_i, DerivOfMatrixSharedWeights_i, layers, newInput2, add, dx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def updateWeights(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, learn, min_clip_value, max_clipv_value):
+    if(DerivOfMatrixBetweenInputAndHidden.max() > max_clipv_value):
+        DerivOfMatrixBetweenInputAndHidden[DerivOfMatrixBetweenInputAndHidden > max_clipv_value] = max_clipv_value
+    if(DerivOfNatrixBetweenHiddenAndOutput.max() > max_clipv_value):
+        DerivOfNatrixBetweenHiddenAndOutput[DerivOfNatrixBetweenHiddenAndOutput > max_clipv_value] = max_clipv_value
+    if(DerivOfMatrixSharedWeights.max() > max_clipv_value):
+        DerivOfMatrixSharedWeights[DerivOfMatrixSharedWeights > max_clipv_value] = max_clipv_value
+    
+    
+    if(DerivOfMatrixBetweenInputAndHidden.min() < min_clip_value):
+        DerivOfMatrixBetweenInputAndHidden[DerivOfMatrixBetweenInputAndHidden < min_clip_value] = min_clip_value
+    if(DerivOfNatrixBetweenHiddenAndOutput.min() < min_clip_value):
+        DerivOfNatrixBetweenHiddenAndOutput[DerivOfNatrixBetweenHiddenAndOutput < min_clip_value] = min_clip_value
+    if(DerivOfMatrixSharedWeights.min() < min_clip_value):
+        DerivOfMatrixSharedWeights[DerivOfMatrixSharedWeights < min_clip_value] = min_clip_value
+
+    matrixBetweenInputAndHidden -= learn * DerivOfMatrixBetweenInputAndHidden
+    matrixBetweenHiddenAndOutput -= learn * DerivOfNatrixBetweenHiddenAndOutput
+    matrixSharedWeights -= learn * DerivOfMatrixSharedWeights
+
+    return matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights
+
+def predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, relu, add, y, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, T, x, MatrixSharedWeights):
+    predisesor = []
+    for i in range(50):
+        x, y = x[i], y[i]
+        previous = np.zeros((hidden, 1))
+        for t in range(T):
+            DerivOfMatrixBetweenInputAndHidden = np.dot(matrixBetweenInputAndHidden, x)
+            DerivOfNatrixBetweenHiddenAndOutput = np.dot(matrixBetweenHiddenAndOutput, previous)
+            add = DerivOfMatrixBetweenInputAndHidden + DerivOfNatrixBetweenHiddenAndOutput
+            relu = ReluFunc(add)
+            DerivOfMatrixSharedWeights = np.dot(MatrixSharedWeights, relu)
+            previous = relu
+        predisesor.append(DerivOfMatrixSharedWeights)
+    predisesor = np.arrays(predisesor)
+
+def gradient(x_train, y_train, iter, sizeOf):
+    learn, nepoch, T, hidden, bptt_truncate, min_clip_value, max_clipv_value, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights = intit_initialVal(sizeOf)
     for i in range(iter):
-        Z1, A1, Z2, A2 = forwardProp(weight1, bias1, weight2, bias2, x)
-        dweight1, dbias1, dweight2, dbias2 = backProp(Z1, A1, Z2, A2, weight2, x, y)
-        weight1, bias1, weight2, bias2 = update(alpha, weight1, bias1, weight2, bias2, dweight1, dbias1, dweight2, dbias2)
-        if i % 10 == 0:
-            print("iteration " + i +"\n"+"Accuracy")
-            print(accuracy(predictions(A2),y))
-    return weight1, bias1, weight2, bias2
+        matrixBetweenInputAndHidden2, matrixBetweenHiddenAndOutput2, matrixSharedWeights2, tempLoss = checkForLossTraining(nepoch, x_train, y_train, hidden, T, matrixBetweenInputAndHidden, matrixSharedWeights, matrixBetweenHiddenAndOutput)
+        matrixBetweenInputAndHidden2, matrixBetweenHiddenAndOutput2, matrixSharedWeights2, tempLossVal = checkLossValidation(x_train, y_train, hidden, T, matrixBetweenInputAndHidden, matrixSharedWeights, matrixBetweenHiddenAndOutput)
+        DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, DerivOfMatrixBetweenInputAndHidden_t, DerivOfNatrixBetweenHiddenAndOutput_t, DerivOfMatrixSharedWeights_t, DerivOfMatrixBetweenInputAndHidden_i, DerivOfMatrixSharedWeights_i, layers, newInput, newInput2, relu, matrixBetweenInputAndHidden2, matrixSharedWeights2, add, matrixBetweenHiddenAndOutput2 = training(y_train, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, T, x_train, matrixBetweenInputAndHidden2,matrixBetweenHiddenAndOutput2, matrixSharedWeights2)
+        DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, DerivOfMatrixBetweenInputAndHidden_t, DerivOfMatrixSharedWeights_t, DerivOfMatrixBetweenInputAndHidden_i, DerivOfMatrixSharedWeights_i, layers, newInput2, add, dx = backProp(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput, DerivOfMatrixSharedWeights_t, y_train, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, T, x_train, bptt_truncate, layers, add, DerivOfMatrixSharedWeights, DerivOfNatrixBetweenHiddenAndOutput_t, matrixBetweenHiddenAndOutput2, matrixSharedWeights2, matrixBetweenInputAndHidden2, DerivOfMatrixBetweenInputAndHidden_t)
+        matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights = updateWeights(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, learn, min_clip_value, max_clipv_value)
+        #print(A2)
+        if i % 1 == 0:
+            #print("iteration " + str(i))
+            print(Epoch(i, tempLossVal, tempLoss))
+            
+    return matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights
 
 
+         
 
+
+            
+
+
+            
 
 
 cleaning = inputs()
+stockData = inputs.getStock()
 
-data_dev_test, Y_dev, X_dev, data_train, Y_train, X_train, sizeOf = inputs.cleaning()
 
-gradient(X_train, Y_train, 300, .01, len(X_train)+1)
-    
+
+x_train, x_test, y_train, y_test = inputs.getClosing(stockData)
+#x_train = (cleanX(x_train))
+sizeOf = len(x_train)
+gradient(x_train, y_train, 100, sizeOf)
+
+
+
+
+# print(x_train)
+# print("")
+# print("y_train")
+# print(y_train)
