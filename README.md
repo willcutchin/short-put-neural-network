@@ -23,12 +23,6 @@ The pip commands for all are as follows: pip install yfinance, pip install panda
    * [Objectives](#-objectives)
    * [Tasks](#-task-table)
    * [Implementation](#-implementation)
-     * Structure
-       * Inputs
-       * Outputs  
-   * [Math Required](#-math-required)
-     * Formulas
-     * Weighting
    * [Technology Stack](#-technology-stack)
    * [Results](#-results)
    * [References](#-references)
