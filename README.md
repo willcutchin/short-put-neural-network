@@ -47,16 +47,16 @@ The pip commands for all are as follows: pip install yfinance, pip install panda
 ## 🗓 Task Table
 | Task           | Time required | Assigned to   | Current Status | Finished | 
 |----------------|---------------|---------------|----------------|-----------|
-| LSTM Neural Net Theory| > 4 Days       | Will/Erik/Yash   | In Progress   |   <li> [ ] </li>  |
-| LSTM Neural Net Implementation| > 1 Week        | Will/Erik/Yash   | TODO  | <li> [ ] </li>     |
-| LSTM Neural Net Training| > 2 Days      | Will/Erik/Yash   | TODO   | <li> [ ] </li>  |
-| LSTM Neural Net Real Time| > 1 Days      | Will/Erik/Yash   | TODO   | <li> [ ] </li>  |
-| NN Collect Data   | > 3 Days      | Will/Yash   | In Progress    |    <li> [ ] </li>     |
-| NN Prepare Data   | > 2 hours     | Will/Yash   |   TODO         |    <li> [ ] </li>     |
-| NN Object Cache   | > 1 hours     | Will/Yash   |   TODO         |    <li> [ ] </li>     |
-| Visualization - Data   |  > 2 Days    | Will   |   TODO      |    <li> [ ] </li> |
-| Visualization - Visualization   | > 2 Days     | Will   |   TODO      |    <li> [ ] </li> |
-| Visualization - Real Time Results   | > 2 Days     | Will   |   TODO      |    <li> [ ] </li> |
+| RNN Neural Net Theory| > 4 Days       | Will/Erik/Yash   | Done   |   <li> [ X] </li>  |
+| RNN Neural Net Implementation| > 1 Week        | Will/Erik/Yash   | Done  | <li> [ X] </li>     |
+| RNN Neural Net Training| > 2 Days      | Will/Erik/Yash   | Done   | <li> [ X] </li>  |
+| RNN Neural Net Real Time| > 1 Days      | Will/Erik/Yash   | Done   | <li> [X ] </li>  |
+| NN Collect Data   | > 3 Days      | Will/Yash   | Done    |    <li> [ X] </li>     |
+| NN Prepare Data   | > 2 hours     | Will/Yash   |   Done         |    <li> [X ] </li>     |
+| NN Object Cache   | > 1 hours     | Will/Yash   |   Done         |    <li> [ X] </li>     |
+| Visualization - Data   |  > 2 Days    | Will   |   Done      |    <li> [ X] </li> |
+| Visualization - Visualization   | > 2 Days     | Will   |   Done      |    <li> [X ] </li> |
+| Visualization - Real Time Results   | > 2 Days     | Will   |   Done      |    <li> [ X] </li> |
 
 
 ## 🛠 Implementation
