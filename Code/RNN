@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use("bmh")
-from Data_Fixing_for_RNN import *
-from Data import *
+from cleaning import *
+from DataProcessing import *
 
 
 def intit_initialVal(sizeOf):
