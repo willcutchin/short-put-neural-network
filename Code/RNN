@@ -2,8 +2,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use("bmh")
-from DataSet import *
-from cleaning import *
+from Data_Fixing_for_RNN import *
+from Data import *
+
 
 def intit_initialVal(sizeOf):
 #intialize param
@@ -178,24 +179,40 @@ def predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAn
     return predisesor
 
 def optionPrice( curPrice, strike, riskF = 0.025):
-    prices = stockData[len(stockData)-45:]
-    stdPrices = np.array([((x-(np.sum(prices) / np.size(prices)))/np.std(prices)) for x in prices])
-    vola = math.sqrt((np.sum((np.array([(x-((np.sum(stdPrices))/np.size(stdPrices)))**2 for x in stdPrices])))/np.size(stdPrices)))
-    d1 = (math.log(curPrice/strike) + .125(riskF + (vola**2)/(2)))/(vola * math.sqrt(.125))
+    prices = stockData["Close"][len(stockData)-45:]
+    mean = (np.sum(prices) / np.size(prices))
+    std = np.std(prices)
+    stdPrices = []
+    for i in prices:
+        diff = i - mean
+        std = diff/std
+        stdPrices.append(std)
+    stdPrices = np.array(stdPrices)
+    stdMean = ((np.sum(stdPrices))/np.size(stdPrices))
+    stdSize = np.size(stdPrices)
+    stdDeviation = []
+    for j in stdPrices:
+        dif = j - stdMean
+        raised = dif**2
+        stdDeviation.append(raised)
+    stdDeviation = np.array(stdDeviation)
+    stdVarriance = (np.sum(stdDeviation)/stdSize)
+    vola = math.sqrt(stdVarriance)
+    d1 = (math.log(curPrice/strike) + .125*(riskF + (vola**2)/(2)))/(vola * math.sqrt(.125))
 
     d2 = d1 - vola*math.sqrt(.125)
 
-    normProbd1 = (1/math.sqrt(2*math.pi)) * math.e **-1((d1**2)/2)
+    normProbd1 = (1/math.sqrt(2*math.pi)) * math.e **-1*((d1**2)/2)
     # May need to figure out if I input d1 as -d1
-    normProbd2 = (1/math.sqrt(2*math.pi)) * math.e **-1((d2**2)/2)
+    normProbd2 = (1/math.sqrt(2*math.pi)) * math.e **-1*((d2**2)/2)
     # May need to figure out if I input d2 as -d2
     optnPrice = (strike*math.e**(-riskF*.125)) * normProbd2 - curPrice*normProbd1
     return optnPrice
 
 def premium():
-    curPrice = stockData[-1]
-    matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, relu, add, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, T = gradient(x_train, y_train, x_test, y_test, 50, sizeOf)
-    psudoStrike = predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights,relu, add, y_test, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, newSizeOf,x_test, matrixSharedWeights)
+    curPrice = stockData["Close"].iloc[-1]
+    matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, relu, add, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, T = gradient(x_train, y_train, x_test, y_test, 200, sizeOf)
+    psudoStrike = curPrice + predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights,relu, add, y_test, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, newSizeOf,x_test, matrixSharedWeights)[0][0][0]
     premn = optionPrice(curPrice, psudoStrike)
     return premn, psudoStrike
 
@@ -237,7 +254,9 @@ newSizeOf = len(x_test)
 #arr = predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights,relu, add, y_test, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, newSizeOf,x_test, matrixSharedWeights)
 
 prem, price = premium()
-print(prem)
-print(price)
+#premium for a stock at the break even point
+print("Premium per contract (contract = 100 shares): " +  str(prem))
+#projected price
+print("Projected Price per Share: " + str(price))
 # print(x_train)
 # print("")
