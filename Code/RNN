@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use("bmh")
-from Data_Fixing_for_RNN import *
-from Data import *
+from DataSet import *
+from cleaning import *
 
 def intit_initialVal(sizeOf):
 #intialize param
@@ -168,7 +168,7 @@ def predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAn
         previous = np.zeros((hidden, 1))
         for t in range(T):
             DerivOfMatrixBetweenInputAndHidden = np.dot(matrixBetweenInputAndHidden, x)
-            DerivOfMatrixSharedWeights = np.dot(matrixSharedWeights, previous)
+            DerivOfMatrixSharedWeights = np.dot(MatrixSharedWeights, previous)
             add = DerivOfMatrixBetweenInputAndHidden + DerivOfMatrixSharedWeights
             relu = ReluFunc(add)
             DerivOfMatrixBetweenHiddenAndOutput = np.dot(matrixBetweenHiddenAndOutput, relu)
@@ -176,6 +176,28 @@ def predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAn
         predisesor.append(DerivOfMatrixBetweenHiddenAndOutput)
     predisesor = np.array(predisesor)
     return predisesor
+
+def optionPrice( curPrice, strike, riskF = 0.025):
+    prices = stockData[len(stockData)-45:]
+    stdPrices = np.array([((x-(np.sum(prices) / np.size(prices)))/np.std(prices)) for x in prices])
+    vola = math.sqrt((np.sum((np.array([(x-((np.sum(stdPrices))/np.size(stdPrices)))**2 for x in stdPrices])))/np.size(stdPrices)))
+    d1 = (math.log(curPrice/strike) + .125(riskF + (vola**2)/(2)))/(vola * math.sqrt(.125))
+
+    d2 = d1 - vola*math.sqrt(.125)
+
+    normProbd1 = (1/math.sqrt(2*math.pi)) * math.e **-1((d1**2)/2)
+    # May need to figure out if I input d1 as -d1
+    normProbd2 = (1/math.sqrt(2*math.pi)) * math.e **-1((d2**2)/2)
+    # May need to figure out if I input d2 as -d2
+    optnPrice = (strike*math.e**(-riskF*.125)) * normProbd2 - curPrice*normProbd1
+    return optnPrice
+
+def premium():
+    curPrice = stockData[-1]
+    matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, relu, add, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, T = gradient(x_train, y_train, x_test, y_test, 50, sizeOf)
+    psudoStrike = predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights,relu, add, y_test, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, newSizeOf,x_test, matrixSharedWeights)
+    premn = optionPrice(curPrice, psudoStrike)
+    return premn, psudoStrike
 
 def gradient(x_train, y_train, x_test, y_test, iter, sizeOf):
     learn, nepoch, T, hidden, bptt_truncate, min_clip_value, max_clipv_value, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights = intit_initialVal(sizeOf)
@@ -211,12 +233,11 @@ x_train, x_test, y_train, y_test = inputs.getClosing(stockData)
 #x_train = (cleanX(x_train))
 sizeOf = len(x_train)
 newSizeOf = len(x_test)
-matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, relu, add, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, T = gradient(x_train, y_train, x_test, y_test, 50, sizeOf)
-arr = predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights,relu, add, y_test, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, newSizeOf,x_test, matrixSharedWeights)
+#matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, matrixSharedWeights, DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights, relu, add, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, T = gradient(x_train, y_train, x_test, y_test, 50, sizeOf)
+#arr = predictions(DerivOfMatrixBetweenInputAndHidden, DerivOfNatrixBetweenHiddenAndOutput,DerivOfMatrixSharedWeights,relu, add, y_test, hidden, matrixBetweenInputAndHidden, matrixBetweenHiddenAndOutput, newSizeOf,x_test, matrixSharedWeights)
 
-
-
+prem, price = premium()
+print(prem)
+print(price)
 # print(x_train)
 # print("")
-# print("y_train")
-# print(y_train)
