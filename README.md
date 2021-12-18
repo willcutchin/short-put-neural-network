@@ -54,9 +54,6 @@ The pip commands for all are as follows: pip install yfinance, pip install panda
 | NN Collect Data   | > 3 Days      | Will/Yash   | Done    |    <li> [ X] </li>     |
 | NN Prepare Data   | > 2 hours     | Will/Yash   |   Done         |    <li> [X ] </li>     |
 | NN Object Cache   | > 1 hours     | Will/Yash   |   Done         |    <li> [ X] </li>     |
-| Visualization - Data   |  > 2 Days    | Will   |   Done      |    <li> [ X] </li> |
-| Visualization - Visualization   | > 2 Days     | Will   |   Done      |    <li> [X ] </li> |
-| Visualization - Real Time Results   | > 2 Days     | Will   |   Done      |    <li> [ X] </li> |
 
 
 ## 🛠 Implementation
