@@ -57,18 +57,6 @@ The pip commands for all are as follows: pip install yfinance, pip install panda
 
 
 ## 🛠 Implementation
-### Structure
-* #### Inputs
-* #### Outputs
-
-## ✏️ Math Required
-### Financial Formulas  
-* #### Delta
-  * ##### Formula
-  * ##### Function
-* #### Implied Volitility
-* #### Strike Price
-### Weighting Formulas
 
 ## ⚙ Technology Stack
 * Languages
